@@ -62,19 +62,15 @@ function selectCategory(cat: string | null) {
 
 /** Map categories to subtle gradient backgrounds */
 const categoryColors: Record<string, string> = {
-  Data: 'from-blue-500/10 to-blue-600/5',
   Design: 'from-pink-500/10 to-pink-600/5',
-  Developer: 'from-emerald-500/10 to-emerald-600/5',
+  Marketing: 'from-emerald-500/10 to-emerald-600/5',
   Utility: 'from-amber-500/10 to-amber-600/5',
-  Writing: 'from-violet-500/10 to-violet-600/5',
 }
 
 const categoryTextColors: Record<string, string> = {
-  Data: 'text-blue-400',
   Design: 'text-pink-400',
-  Developer: 'text-emerald-400',
+  Marketing: 'text-emerald-400',
   Utility: 'text-amber-400',
-  Writing: 'text-violet-400',
 }
 
 function getCategoryGradient(cat: string): string {
