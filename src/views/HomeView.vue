@@ -144,6 +144,11 @@ function getCategoryTextColor(cat: string): string {
           <!-- Name -->
           <p class="text-sm font-semibold leading-tight mb-1">{{ tool.meta.name }}</p>
 
+          <!-- Description — shows on hover -->
+          <p class="text-[11px] text-muted-foreground leading-snug mt-1 line-clamp-2 opacity-0 max-h-0 transition-all duration-200 group-hover:opacity-100 group-hover:max-h-10">
+            {{ tool.meta.description }}
+          </p>
+
           <!-- Category tag -->
           <span
             class="text-[10px] font-medium uppercase tracking-wider mt-1"
