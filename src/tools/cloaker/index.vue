@@ -17,6 +17,9 @@ export const toolMeta = {
 import { ref, computed } from 'vue'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
+import { useCopyToClipboard } from '@/composables/useCopyToClipboard'
+
+const { copy, copied } = useCopyToClipboard()
 
 const realUrl = ref('')
 const safeUrl = ref('')
@@ -41,6 +44,17 @@ function toggleCrawler(id: string) {
   }
 }
 
+function escapeForJsString(str: string): string {
+  return str
+    .replace(/\\/g, '\\\\')
+    .replace(/"/g, '\\"')
+    .replace(/'/g, "\\'")
+    .replace(/\n/g, '\\n')
+    .replace(/\r/g, '\\r')
+    .replace(/</g, '\\x3c')
+    .replace(/>/g, '\\x3e')
+}
+
 const generatedScript = computed(() => {
   if (!realUrl.value || !safeUrl.value || selectedCrawlers.value.length === 0) return ''
 
@@ -49,14 +63,17 @@ const generatedScript = computed(() => {
     .filter(Boolean)
     .join('|')
 
+  const escapedSafeUrl = escapeForJsString(safeUrl.value)
+  const escapedRealUrl = escapeForJsString(realUrl.value)
+
   return `<script>
 (function() {
   var ua = navigator.userAgent;
   var crawlerPattern = /${uaPatterns}/i;
   if (crawlerPattern.test(ua)) {
-    window.location.replace("${safeUrl.value}");
+    window.location.replace("${escapedSafeUrl}");
   } else {
-    window.location.replace("${realUrl.value}");
+    window.location.replace("${escapedRealUrl}");
   }
 })();
 <\/script>
@@ -66,21 +83,13 @@ const generatedScript = computed(() => {
 $ua = $_SERVER['HTTP_USER_AGENT'] ?? '';
 $pattern = '/${uaPatterns}/i';
 if (preg_match($pattern, $ua)) {
-    header('Location: ${safeUrl.value}');
+    header('Location: ${escapedSafeUrl}');
 } else {
-    header('Location: ${realUrl.value}');
+    header('Location: ${escapedRealUrl}');
 }
 exit;
 ?>`
 })
-
-const copied = ref(false)
-function copyScript() {
-  if (!generatedScript.value) return
-  navigator.clipboard.writeText(generatedScript.value)
-  copied.value = true
-  setTimeout(() => (copied.value = false), 2000)
-}
 </script>
 
 <template>
@@ -133,7 +142,7 @@ function copyScript() {
         <CardContent class="p-4 flex flex-col gap-3">
           <div class="flex items-center justify-between">
             <p class="text-sm font-medium">Generated Script</p>
-            <Button size="sm" variant="outline" @click="copyScript" :disabled="!generatedScript">
+            <Button size="sm" variant="outline" @click="copy(generatedScript)" :disabled="!generatedScript">
               {{ copied ? 'Copied!' : 'Copy' }}
             </Button>
           </div>

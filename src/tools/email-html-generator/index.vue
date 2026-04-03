@@ -17,6 +17,10 @@ export const toolMeta = {
 import { ref, computed } from 'vue'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
+import { useCopyToClipboard } from '@/composables/useCopyToClipboard'
+import { downloadBlob } from '@/lib/download'
+
+const { copy, copied } = useCopyToClipboard()
 
 const brandName = ref('Glitchy')
 const brandColor = ref('#7c3aed')
@@ -83,21 +87,8 @@ const emailHtml = computed(() => {
 </html>`
 })
 
-const copied = ref(false)
-function copyHtml() {
-  navigator.clipboard.writeText(emailHtml.value)
-  copied.value = true
-  setTimeout(() => (copied.value = false), 2000)
-}
-
 function downloadHtml() {
-  const blob = new Blob([emailHtml.value], { type: 'text/html' })
-  const url = URL.createObjectURL(blob)
-  const a = document.createElement('a')
-  a.href = url
-  a.download = 'email-template.html'
-  a.click()
-  URL.revokeObjectURL(url)
+  downloadBlob(new Blob([emailHtml.value], { type: 'text/html' }), 'email-template.html')
 }
 </script>
 
@@ -174,7 +165,7 @@ function downloadHtml() {
       </div>
 
       <div class="flex gap-2">
-        <Button @click="copyHtml">{{ copied ? 'Copied!' : 'Copy HTML' }}</Button>
+        <Button @click="copy(emailHtml)">{{ copied ? 'Copied!' : 'Copy HTML' }}</Button>
         <Button variant="outline" @click="downloadHtml">Download .html</Button>
       </div>
     </div>

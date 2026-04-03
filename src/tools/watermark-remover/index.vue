@@ -17,6 +17,7 @@ export const toolMeta = {
 import { ref, onUnmounted } from 'vue'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
+import { downloadDataUrl } from '@/lib/download'
 
 const imageFile = ref<File | null>(null)
 const imageUrl = ref('')
@@ -97,57 +98,70 @@ function processRemoval() {
   const pixels = imgData.data
   const mask = maskData.data
 
-  // For each masked pixel, replace with average of surrounding non-masked pixels
+  // For each masked pixel, replace with average of surrounding non-masked pixels.
+  // Process in batches of rows to avoid freezing the UI on large images.
   const radius = Math.max(brushSize.value, 10)
-  for (let y = 0; y < h; y++) {
-    for (let x = 0; x < w; x++) {
-      const i = (y * w + x) * 4
-      if (mask[i] > 50) {
-        let r = 0, g = 0, b = 0, count = 0
-        for (let dy = -radius; dy <= radius; dy++) {
-          for (let dx = -radius; dx <= radius; dx++) {
-            const nx = x + dx
-            const ny = y + dy
-            if (nx < 0 || nx >= w || ny < 0 || ny >= h) continue
-            const ni = (ny * w + nx) * 4
-            if (mask[ni] <= 50) {
-              r += pixels[ni]
-              g += pixels[ni + 1]
-              b += pixels[ni + 2]
-              count++
+  const BATCH_SIZE = 50
+
+  function processBatch(startY: number) {
+    const endY = Math.min(startY + BATCH_SIZE, h)
+    for (let y = startY; y < endY; y++) {
+      for (let x = 0; x < w; x++) {
+        const i = (y * w + x) * 4
+        if (mask[i] > 50) {
+          let r = 0, g = 0, b = 0, count = 0
+          for (let dy = -radius; dy <= radius; dy++) {
+            for (let dx = -radius; dx <= radius; dx++) {
+              const nx = x + dx
+              const ny = y + dy
+              if (nx < 0 || nx >= w || ny < 0 || ny >= h) continue
+              const ni = (ny * w + nx) * 4
+              if (mask[ni] <= 50) {
+                r += pixels[ni]
+                g += pixels[ni + 1]
+                b += pixels[ni + 2]
+                count++
+              }
             }
           }
-        }
-        if (count > 0) {
-          pixels[i] = r / count
-          pixels[i + 1] = g / count
-          pixels[i + 2] = b / count
+          if (count > 0) {
+            pixels[i] = r / count
+            pixels[i + 1] = g / count
+            pixels[i + 2] = b / count
+          }
         }
       }
     }
+
+    if (endY < h) {
+      setTimeout(() => processBatch(endY), 0)
+    } else {
+      finalize()
+    }
   }
 
-  ctx.putImageData(imgData, 0, 0)
+  function finalize() {
+    ctx.putImageData(imgData, 0, 0)
 
-  // Second pass: slight blur on the affected area for smoother results
-  const resultCanvas = document.createElement('canvas')
-  resultCanvas.width = w
-  resultCanvas.height = h
-  const rctx = resultCanvas.getContext('2d')!
-  rctx.drawImage(canvas.value, 0, 0)
-  resultUrl.value = resultCanvas.toDataURL('image/png')
+    // Second pass: slight blur on the affected area for smoother results
+    const resultCanvas = document.createElement('canvas')
+    resultCanvas.width = w
+    resultCanvas.height = h
+    const rctx = resultCanvas.getContext('2d')!
+    rctx.drawImage(canvas.value!, 0, 0)
+    resultUrl.value = resultCanvas.toDataURL('image/png')
 
-  // Clear mask
-  maskCtx.clearRect(0, 0, w, h)
-  processing.value = false
+    // Clear mask
+    maskCtx.clearRect(0, 0, w, h)
+    processing.value = false
+  }
+
+  processBatch(0)
 }
 
 function downloadResult() {
   if (!resultUrl.value) return
-  const a = document.createElement('a')
-  a.href = resultUrl.value
-  a.download = 'watermark-removed.png'
-  a.click()
+  downloadDataUrl(resultUrl.value, 'watermark-removed.png')
 }
 
 function resetTool() {

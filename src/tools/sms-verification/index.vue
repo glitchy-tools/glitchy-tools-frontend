@@ -17,6 +17,9 @@ export const toolMeta = {
 import { ref, computed } from 'vue'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
+import { useCopyToClipboard } from '@/composables/useCopyToClipboard'
+
+const { copy: copyToClipboard } = useCopyToClipboard()
 
 const codeLength = ref(6)
 const codeType = ref<'numeric' | 'alphanumeric'>('numeric')
@@ -70,7 +73,7 @@ function verifyCode() {
 }
 
 function copyCode() {
-  if (generatedCode.value) navigator.clipboard.writeText(generatedCode.value)
+  if (generatedCode.value) copyToClipboard(generatedCode.value)
 }
 
 const isExpired = computed(() => timeRemaining.value <= 0 && generatedCode.value !== '')
