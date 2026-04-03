@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import SiteHeader from '@/components/SiteHeader.vue'
-import HeroCarousel from '@/components/HeroCarousel.vue'
-import CinemaStudioSection from '@/components/CinemaStudioSection.vue'
-import TopChoiceSection from '@/components/TopChoiceSection.vue'
-import CharacterBanner from '@/components/CharacterBanner.vue'
-import GallerySection from '@/components/GallerySection.vue'
-import ExploreFeatures from '@/components/ExploreFeatures.vue'
-import CtaSection from '@/components/CtaSection.vue'
-import SiteFooter from '@/components/SiteFooter.vue'
+import SiteHeader from '@/components/landing/SiteHeader.vue'
+import HeroCarousel from '@/components/landing/HeroCarousel.vue'
+import OpenToolsSection from '@/components/landing/OpenToolsSection.vue'
+import CreativeSuiteSection from '@/components/landing/CreativeSuiteSection.vue'
+import BrandBanner from '@/components/landing/BrandBanner.vue'
+import GallerySection from '@/components/landing/GallerySection.vue'
+import ExploreToolsSection from '@/components/landing/ExploreToolsSection.vue'
+import CallToActionSection from '@/components/landing/CallToActionSection.vue'
+import SiteFooter from '@/components/landing/SiteFooter.vue'
 </script>
 
 <template>
@@ -16,9 +16,9 @@ import SiteFooter from '@/components/SiteFooter.vue'
 
     <main>
       <HeroCarousel />
-      <CinemaStudioSection />
-      <TopChoiceSection />
-      <CharacterBanner />
+      <OpenToolsSection />
+      <CreativeSuiteSection />
+      <BrandBanner />
 
       <GallerySection
         title="Email Templates"
@@ -26,8 +26,8 @@ import SiteFooter from '@/components/SiteFooter.vue'
         href="/email-templates"
       />
 
-      <ExploreFeatures />
-      <CtaSection />
+      <ExploreToolsSection />
+      <CallToActionSection />
     </main>
 
     <SiteFooter />
