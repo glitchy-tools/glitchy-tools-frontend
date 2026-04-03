@@ -14,6 +14,11 @@ const router = createRouter({
       component: () => import('@/views/ToolView.vue'),
       props: true,
     },
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'not-found',
+      component: () => import('@/views/NotFoundView.vue'),
+    },
   ],
 })
 

@@ -1,24 +1,5 @@
 import type { Component } from 'vue'
-
-export interface ToolSeo {
-  title: string
-  description: string
-  keywords: string[]
-}
-
-export interface ToolMeta {
-  name: string
-  slug: string
-  description: string
-  icon: string
-  category: string
-  seo: ToolSeo
-}
-
-export interface ToolEntry {
-  meta: ToolMeta
-  component: Component
-}
+import type { ToolMeta, ToolEntry } from '@/types'
 
 const toolModules: Record<string, { default: Component; toolMeta: ToolMeta }> =
   import.meta.glob('../tools/*/index.vue', { eager: true })

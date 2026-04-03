@@ -3,14 +3,6 @@
 @font-face {
   font-family: "Outfit";
   font-style: normal;
-  font-weight: 100 900;
-  font-display: swap;
-  src: url("/fonts/Outfit-400.ttf") format("truetype");
-}
-
-@font-face {
-  font-family: "Outfit";
-  font-style: normal;
   font-weight: 100;
   font-display: swap;
   src: url("/fonts/Outfit-100.ttf") format("truetype");
@@ -115,8 +107,14 @@
     --input: 0 0% 15%;
     --primary: 270 91% 65%;
     --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 12%;
+    --secondary-foreground: 0 0% 97%;
     --muted: 0 0% 10%;
     --muted-foreground: 0 0% 45%;
+    --accent: 0 0% 15%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
     --ring: 270 91% 65%;
     --radius: 0.5rem;
   }

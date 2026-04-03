@@ -1,3 +1,4 @@
+
 export interface NavLink {
   label: string
   href: string
@@ -42,4 +43,25 @@ export interface ToolCard {
 export interface FeatureTag {
   label: string
   href: string
+}
+
+// Tool registry types
+export interface ToolSeo {
+  title: string
+  description: string
+  keywords: string[]
+}
+
+export interface ToolMeta {
+  name: string
+  slug: string
+  description: string
+  icon: string
+  category: string
+  seo: ToolSeo
+}
+
+export interface ToolEntry {
+  meta: ToolMeta
+  component: import('vue').Component
 }
