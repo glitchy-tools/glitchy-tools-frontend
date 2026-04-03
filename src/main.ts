@@ -1,12 +1,16 @@
 import { createApp } from 'vue'
-import { createHead } from '@unhead/vue/client'
+import { createRouter, createWebHistory } from 'vue-router'
 import App from './App.vue'
-import router from './router'
-import './assets/index.css'
+import './assets/globals.css'
 
-const app = createApp(App)
-const head = createHead()
+const router = createRouter({
+  history: createWebHistory(),
+  routes: [
+    {
+      path: '/',
+      component: () => import('./views/HomeView.vue')
+    }
+  ]
+})
 
-app.use(head)
-app.use(router)
-app.mount('#app')
+createApp(App).use(router).mount('#app')
