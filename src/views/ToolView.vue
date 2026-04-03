@@ -48,25 +48,21 @@ useHead(computed(() => {
 </script>
 
 <template>
-  <div v-if="tool">
-    <!-- Breadcrumb -->
-    <nav class="mb-4 flex items-center gap-1 text-sm text-muted-foreground" aria-label="Breadcrumb">
-      <RouterLink to="/" class="hover:text-foreground transition-colors">Tools</RouterLink>
-      <span>/</span>
-      <span class="text-foreground font-medium">{{ tool.meta.name }}</span>
-    </nav>
-
-    <!-- Tool header -->
-    <div class="mb-6">
-      <div class="flex items-center gap-3 mb-1">
-        <span class="text-2xl">{{ tool.meta.icon }}</span>
-        <h1 class="text-2xl font-bold tracking-tight">{{ tool.meta.name }}</h1>
-      </div>
-      <p class="text-muted-foreground">{{ tool.meta.description }}</p>
+  <div v-if="tool" class="flex h-screen flex-col">
+    <!-- Slim top bar with back button -->
+    <div class="flex h-10 shrink-0 items-center gap-3 border-b border-border bg-card/80 px-4">
+      <RouterLink to="/" class="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+        Tools
+      </RouterLink>
+      <span class="text-sm text-muted-foreground">/</span>
+      <span class="text-sm font-medium">{{ tool.meta.icon }} {{ tool.meta.name }}</span>
     </div>
 
-    <!-- Tool content — full width -->
-    <component :is="tool.component" />
+    <!-- Tool content — fills remaining space -->
+    <div class="flex-1 overflow-auto p-4 lg:p-6">
+      <component :is="tool.component" />
+    </div>
   </div>
   <div v-else class="py-20 text-center">
     <p class="text-lg text-muted-foreground">Tool not found.</p>
