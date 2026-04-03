@@ -13,21 +13,28 @@ npm run dev
 
 ```
 src/
-  components/       # Landing page sections + shared UI
-  composables/      # Shared Vue composables
-  lib/              # Utility functions
-  registry/         # Auto-discovery tool registry
-  router/           # Vue Router config
-  tools/            # Self-contained tool implementations
-  types/            # TypeScript interfaces
-  views/            # Route-level views (Home, Tool)
+  components/
+    icons/           # SVG icon components
+    landing/         # Landing page sections
+    ui/              # Shared UI primitives (Button, Card)
+  composables/       # Shared Vue composables
+  lib/               # Pure utility functions
+  registry/          # Auto-discovery tool registry
+  router/            # Vue Router config
+  tools/             # Self-contained tool implementations
+  types/             # TypeScript interfaces
+  views/             # Route-level views
 ```
 
 ## Adding a Tool
 
-Create `src/tools/your-tool-name/index.vue` with a `toolMeta` export. It auto-registers and is accessible at `/tools/your-tool-name`.
+Create `src/tools/your-tool-name/index.vue` with a `toolMeta` export. It auto-registers at `/tools/your-tool-name`.
 
-## Current Tools
+## Current Tools (Open)
 
-- Trending Angles (`/tools/trending-angles`)
 - Notification Mockup (`/tools/notification-mockup`)
+- Trending Angles (`/tools/trending-angles`)
+- Email HTML Generator (`/tools/email-html-generator`)
+- Cloaker (`/tools/cloaker`)
+- Watermark Remover (`/tools/watermark-remover`)
+- SMS Verification (`/tools/sms-verification`)
