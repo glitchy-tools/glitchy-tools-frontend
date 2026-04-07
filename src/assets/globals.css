@@ -76,10 +76,10 @@
   --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
 
   /* Colors */
-  --color-bg-primary: rgb(15, 17, 19);
-  --color-bg-card: rgb(20, 21, 26);
-  --color-bg-card-hover: rgb(30, 32, 38);
-  --color-bg-surface: rgb(25, 27, 31);
+  --color-bg-primary: #000000;
+  --color-bg-card: rgb(18, 18, 18);
+  --color-bg-card-hover: rgb(28, 28, 28);
+  --color-bg-surface: rgb(22, 22, 22);
 
   --color-text-primary: rgb(247, 247, 248);
   --color-text-secondary: rgba(255, 255, 255, 0.6);
@@ -99,9 +99,9 @@
 /* Aliases for tool components that use shadcn-style tokens */
 @layer base {
   :root {
-    --background: 0 0% 6%;
+    --background: 0 0% 0%;
     --foreground: 0 0% 97%;
-    --card: 0 0% 8%;
+    --card: 0 0% 7%;
     --card-foreground: 0 0% 97%;
     --border: 0 0% 15%;
     --input: 0 0% 15%;
@@ -131,6 +131,30 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+
+  /* Slim, unobtrusive scrollbar */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+  }
+
+  *::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
 }
 
 @utility hide-scrollbar {
@@ -144,13 +168,13 @@
 @utility site-container {
   margin-inline: auto;
   width: 100%;
-  max-width: 1360px;
-  padding-inline: 1rem;
+  max-width: 100%;
+  padding-inline: 1.5rem;
 
   @media (width >= 48rem) {
-    padding-inline: 1.5rem;
+    padding-inline: 2rem;
   }
   @media (width >= 64rem) {
-    padding-inline: 2rem;
+    padding-inline: 2.5rem;
   }
 }
