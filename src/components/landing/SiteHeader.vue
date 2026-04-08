@@ -4,18 +4,8 @@ const mobileMenuOpen = ref(false)
 
 const navLinks = [
   { label: 'Explore', href: '/', active: true },
-  { label: 'Templates', href: '/templates' },
   { label: 'AI Studio', href: '/create', badge: 'New' },
-  { label: 'Analytics', href: '/analytics' },
-  { label: 'Campaigns', href: '/campaigns', badge: 'New' },
-  { label: 'Email', href: '/email' },
-  { label: 'Social', href: '/social' },
-  { label: 'Brand Kit', href: '/brand-kit' },
-  { label: 'Ads Manager', href: '/ads' },
-  { label: 'Automations', href: '/automations', badge: 'New' },
-  { label: 'Integrations', href: '/integrations' },
-  { label: 'Assets', href: '/assets' },
-  { label: 'Gallery', href: '/gallery' },
+  { label: 'Free Tools', href: '/free-tools' },
 ]
 </script>
 

@@ -21,25 +21,20 @@ const filteredTools = computed(() => {
   })
 })
 
-const toolIcons: Record<string, string> = {
-  'notification-mockup': 'M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0',
-  'trending-angles': 'M13 2L3 14h9l-1 8 10-12h-9l1-8',
-  'email-html-generator': 'M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2zM22 6l-10 7L2 6',
-  'cloaker': 'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z',
-  'watermark-remover': 'M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12',
-  'sms-verification': 'M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z',
+const categoryIcons: Record<string, string> = {
+  Marketing: 'M22 12h-4l-3 9L9 3l-3 9H2',
+  Design: 'M12 19l7-7 3 3-7 7-3-3zM18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5zM2 2l7.586 7.586',
+  Content: 'M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z',
+  Analytics: 'M18 20V10M12 20V4M6 20v-6',
+  Productivity: 'M22 11.08V12a10 10 0 1 1-5.93-9.14M22 4L12 14.01l-3-3',
 }
 
-const defaultIcon = 'M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z'
-
-const gradients = [
-  'from-violet-800/50 to-purple-950/40',
-  'from-purple-800/50 to-indigo-950/40',
-  'from-fuchsia-800/50 to-violet-950/40',
-  'from-indigo-800/50 to-purple-950/40',
-  'from-violet-700/40 to-fuchsia-950/40',
-  'from-purple-700/40 to-violet-950/40',
-]
+const gradientFromSlug = (slug: string) => {
+  let hash = 0
+  for (let i = 0; i < slug.length; i++) hash = slug.charCodeAt(i) + ((hash << 5) - hash)
+  const hue = Math.abs(hash) % 60 + 250
+  return `linear-gradient(135deg, hsl(${hue}, 40%, 20%) 0%, hsl(${hue + 30}, 30%, 12%) 100%)`
+}
 </script>
 
 <template>
@@ -91,24 +86,30 @@ const gradients = [
       </div>
 
       <!-- Results -->
-      <div v-if="filteredTools.length" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
+      <div v-if="filteredTools.length" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <a
-          v-for="(tool, i) in filteredTools"
+          v-for="tool in filteredTools"
           :key="tool.meta.slug"
           :href="`/tools/${tool.meta.slug}`"
-          class="rounded-2xl overflow-hidden bg-bg-card border border-border-card hover:border-white/15 transition-all hover:shadow-lg hover:shadow-black/20 hover:-translate-y-0.5"
+          class="flex gap-4 rounded-2xl bg-bg-card border border-border-card p-4 hover:border-white/15 transition-all hover:shadow-lg hover:shadow-black/20"
         >
-          <div class="aspect-[4/3] bg-gradient-to-br flex items-center justify-center" :class="gradients[i % gradients.length]">
-            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-white/80">
-              <path :d="toolIcons[tool.meta.slug] || defaultIcon" />
+          <div
+            class="h-14 w-14 shrink-0 rounded-xl flex items-center justify-center"
+            :style="{ background: gradientFromSlug(tool.meta.slug) }"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
+              fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+              class="text-white/70"
+            >
+              <path :d="categoryIcons[tool.meta.category] || categoryIcons.Productivity" />
             </svg>
           </div>
-          <div class="p-3 md:p-4">
-            <div class="flex items-center gap-2 mb-1">
-              <h3 class="text-sm font-semibold text-white leading-tight">{{ tool.meta.name }}</h3>
-            </div>
-            <p class="text-xs text-text-tertiary leading-relaxed line-clamp-2 mb-2">{{ tool.meta.description }}</p>
-            <span class="inline-block rounded-full bg-bg-surface px-2 py-0.5 text-[10px] text-text-muted font-medium">{{ tool.meta.category }}</span>
+
+          <div class="flex-1 min-w-0">
+            <h3 class="text-sm font-semibold text-white mb-0.5">{{ tool.meta.name }}</h3>
+            <span class="inline-block text-[10px] font-medium text-accent-lime mb-1.5">{{ tool.meta.category }}</span>
+            <p class="text-xs text-text-tertiary leading-relaxed line-clamp-2">{{ tool.meta.description }}</p>
           </div>
         </a>
       </div>
