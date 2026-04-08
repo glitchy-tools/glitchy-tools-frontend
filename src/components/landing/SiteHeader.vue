@@ -1,13 +1,11 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import LogoIcon from '@/components/icons/LogoIcon.vue'
-
 const mobileMenuOpen = ref(false)
 
 const navLinks = [
   { label: 'Explore', href: '/', active: true },
   { label: 'Templates', href: '/templates' },
-  { label: 'AI Studio', href: '/ai-studio' },
+  { label: 'AI Studio', href: '/create', badge: 'New' },
   { label: 'Analytics', href: '/analytics' },
   { label: 'Campaigns', href: '/campaigns', badge: 'New' },
   { label: 'Email', href: '/email' },
@@ -24,8 +22,8 @@ const navLinks = [
 <template>
   <header class="h-16 w-full sticky top-0 z-50 bg-bg-primary">
     <div class="site-container h-full flex items-center justify-between">
-      <a href="/" class="flex items-center gap-2 shrink-0">
-        <LogoIcon />
+      <a href="/" class="flex items-center gap-2 shrink-0 text-sm font-bold text-text-primary">
+        Glitchy Tools
       </a>
 
       <nav class="hidden lg:flex items-center gap-1 overflow-x-auto hide-scrollbar mx-4">
