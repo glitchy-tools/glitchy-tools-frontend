@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref, nextTick, computed } from 'vue'
-import { RouterLink } from 'vue-router'
+import { ref, nextTick, computed, onMounted } from 'vue'
+import { RouterLink, useRoute } from 'vue-router'
 
 interface ChatMessage {
   role: 'user' | 'assistant'
@@ -13,6 +13,16 @@ const isStreaming = ref(false)
 const activeTab = ref<'code' | 'preview'>('code')
 const chatContainer = ref<HTMLElement | null>(null)
 const canvasOpen = ref(false)
+const route = useRoute()
+
+// Auto-send prompt from query param (e.g. /create?prompt=A QR code generator)
+onMounted(() => {
+  const prompt = route.query.prompt as string | undefined
+  if (prompt?.trim()) {
+    userInput.value = prompt.trim()
+    nextTick(() => sendMessage())
+  }
+})
 
 // Extract tool name from the generated code's toolMeta
 const toolName = computed(() => {

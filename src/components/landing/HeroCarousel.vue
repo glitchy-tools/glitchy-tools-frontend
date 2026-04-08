@@ -57,15 +57,13 @@ function scrollRight() {
         v-for="(card, i) in cards"
         :key="i"
         :href="card.href"
-        class="flex-shrink-0 w-[280px] sm:w-[320px] md:w-[340px] lg:w-[calc(25%-12px)] rounded-xl overflow-hidden relative snap-start"
+        class="flex-shrink-0 w-[280px] sm:w-[320px] md:w-[340px] lg:w-[calc(25%-12px)] rounded-2xl overflow-hidden bg-bg-card border border-border-card hover:border-white/15 transition-all hover:-translate-y-0.5 snap-start"
       >
-        <div class="aspect-[16/10] bg-gradient-to-br" :class="card.gradient">
-          <div class="w-full h-full bg-bg-surface opacity-60" />
+        <div class="aspect-[16/7] bg-gradient-to-br flex items-center justify-center" :class="card.gradient">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-white/30"><path :d="card.svgPath" /></svg>
         </div>
-        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-        <div class="absolute bottom-0 left-0 right-0 p-4">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-white/70 mb-1.5"><path :d="card.svgPath" /></svg>
-          <h3 class="text-xs font-bold uppercase tracking-wider text-white mb-1 line-clamp-2">
+        <div class="p-4">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-white mb-1">
             {{ card.title }}
           </h3>
           <p class="text-xs text-text-secondary line-clamp-2">{{ card.subtitle }}</p>
