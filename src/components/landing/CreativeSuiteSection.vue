@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import { useAuthStore } from '@/stores/auth'
+
+const authStore = useAuthStore()
+
 const thumbnails = Array.from({ length: 12 }, (_, i) => ({
   id: `cs-${i}`,
   href: '/templates',
@@ -19,10 +23,17 @@ const thumbnails = Array.from({ length: 12 }, (_, i) => ({
           <p class="text-sm text-text-secondary mb-1">
             The All-in-One Marketing Toolkit
           </p>
-          <a href="/signup" class="w-full inline-block py-2.5 px-4 text-sm font-semibold text-bg-primary bg-accent-lime rounded-lg hover:brightness-110 transition-all mb-3 text-center">
-            Sign up free
-          </a>
-          <p class="text-xs text-text-muted mb-4">No credit card required</p>
+          <template v-if="!authStore.isAuthenticated">
+            <a href="/signup" class="w-full inline-block py-2.5 px-4 text-sm font-semibold text-bg-primary bg-accent-lime rounded-lg hover:brightness-110 transition-all mb-3 text-center">
+              Sign up free
+            </a>
+            <p class="text-xs text-text-muted mb-4">No credit card required</p>
+          </template>
+          <template v-else>
+            <a href="/templates" class="w-full inline-block py-2.5 px-4 text-sm font-semibold text-bg-primary bg-accent-lime rounded-lg hover:brightness-110 transition-all mb-7 text-center">
+              Browse Suite
+            </a>
+          </template>
 
           <a href="/templates" class="text-sm text-text-secondary hover:text-white hover:underline transition-colors">
             Browse all templates

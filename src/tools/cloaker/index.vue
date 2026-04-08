@@ -5,6 +5,7 @@ export const toolMeta = {
   description: 'Detect ad crawlers and redirect them to a different domain.',
   icon: '🕵️',
   category: 'Marketing',
+  exclusive: true,
   seo: {
     title: 'Ad Crawler Cloaker Tool',
     description: 'Generate cloaking scripts that detect ad network crawlers and redirect them to a compliant landing page.',

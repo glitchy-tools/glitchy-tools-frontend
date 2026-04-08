@@ -45,6 +45,13 @@ export interface FeatureTag {
   href: string
 }
 
+// User types
+export interface User {
+  id: string
+  email: string
+  name?: string
+}
+
 // Tool registry types
 export interface ToolSeo {
   title: string
@@ -58,6 +65,7 @@ export interface ToolMeta {
   description: string
   icon: string
   category: string
+  exclusive?: boolean
   seo: ToolSeo
 }
 
