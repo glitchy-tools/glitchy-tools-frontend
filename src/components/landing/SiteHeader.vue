@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import LogoIcon from '@/components/icons/LogoIcon.vue'
-import { useAuthStore } from '@/stores/auth'
 
-const authStore = useAuthStore()
 const mobileMenuOpen = ref(false)
 
 const navLinks = [
@@ -49,7 +47,7 @@ const navLinks = [
       </nav>
 
       <div class="flex items-center gap-2 shrink-0">
-        <template v-if="!authStore.isAuthenticated">
+        <template>
           <a href="/signup" class="hidden md:flex flex-col items-center text-text-secondary hover:text-white transition-colors text-sm relative">
             <span class="flex items-center gap-1">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" class="text-accent-lime">
