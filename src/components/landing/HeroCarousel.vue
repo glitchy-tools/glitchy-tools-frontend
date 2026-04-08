@@ -5,28 +5,32 @@ const scrollContainer = ref<HTMLElement | null>(null)
 
 const cards = [
   {
-    title: 'AI-POWERED AD CREATIVE',
-    subtitle: 'Generate scroll-stopping ads in seconds with AI. Test more, spend less.',
-    href: '/ai-studio',
+    title: 'AI TOOL BUILDER',
+    subtitle: 'Describe any tool and our AI builds it for you in seconds.',
+    href: '/create',
     gradient: 'from-violet-800/50 to-purple-950/40',
+    svgPath: 'M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5',
   },
   {
-    title: 'CAMPAIGN MANAGER 3.0',
-    subtitle: 'Unified dashboard for email, social, and paid \u2014 all in one place.',
-    href: '/campaigns',
+    title: 'NOTIFICATION MOCKUP',
+    subtitle: 'Generate realistic phone notification and chat mockups.',
+    href: '/tools/notification-mockup',
     gradient: 'from-purple-800/50 to-indigo-950/40',
+    svgPath: 'M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0',
   },
   {
-    title: 'SOCIAL SCHEDULER',
-    subtitle: 'Plan, preview, and auto-publish across every platform.',
-    href: '/social',
+    title: 'TRENDING ANGLES',
+    subtitle: 'Discover trending affiliate angles with hooks and offers.',
+    href: '/tools/trending-angles',
     gradient: 'from-fuchsia-800/50 to-violet-950/40',
+    svgPath: 'M13 2L3 14h9l-1 8 10-12h-9l1-8',
   },
   {
-    title: 'ANALYTICS SUITE',
-    subtitle: 'Real-time performance tracking with AI-driven insights and recommendations.',
-    href: '/analytics',
+    title: 'CLOAKER',
+    subtitle: 'Detect ad crawlers and redirect to a different domain.',
+    href: '/tools/cloaker',
     gradient: 'from-indigo-800/50 to-purple-950/40',
+    svgPath: 'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z',
   },
 ]
 
@@ -41,6 +45,10 @@ function scrollRight() {
 
 <template>
   <section class="relative site-container pt-2 md:pt-3 mb-6 md:mb-8 group">
+    <header class="mb-4 md:mb-5">
+      <h2 class="text-base md:text-lg font-bold text-white">Brand New Tools</h2>
+      <p class="text-sm text-text-secondary">The latest additions to the toolkit</p>
+    </header>
     <div
       ref="scrollContainer"
       class="flex gap-4 overflow-x-auto hide-scrollbar snap-x snap-mandatory"
@@ -56,6 +64,7 @@ function scrollRight() {
         </div>
         <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
         <div class="absolute bottom-0 left-0 right-0 p-4">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-white/70 mb-1.5"><path :d="card.svgPath" /></svg>
           <h3 class="text-xs font-bold uppercase tracking-wider text-white mb-1 line-clamp-2">
             {{ card.title }}
           </h3>

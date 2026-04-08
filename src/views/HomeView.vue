@@ -2,6 +2,7 @@
 import SiteHeader from '@/components/landing/SiteHeader.vue'
 import HeroCarousel from '@/components/landing/HeroCarousel.vue'
 import OpenToolsSection from '@/components/landing/OpenToolsSection.vue'
+import BuilderCTA from '@/components/landing/BuilderCTA.vue'
 import CreativeSuiteSection from '@/components/landing/CreativeSuiteSection.vue'
 import BrandBanner from '@/components/landing/BrandBanner.vue'
 import GallerySection from '@/components/landing/GallerySection.vue'
@@ -16,6 +17,7 @@ import SiteFooter from '@/components/landing/SiteFooter.vue'
 
     <main>
       <HeroCarousel />
+      <BuilderCTA />
       <OpenToolsSection />
       <CreativeSuiteSection />
       <BrandBanner />
