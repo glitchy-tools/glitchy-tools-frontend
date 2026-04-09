@@ -5,7 +5,7 @@ import { useBuilderChat } from '@/composables/useBuilderChat'
 import { useCodePreview } from '@/composables/useCodePreview'
 
 const { messages, userInput, isStreaming, chatContainer, sendMessage, handleKeydown } = useBuilderChat()
-const { activeTab, canvasOpen, generatedCode, toolName, hasCode, previewHtml } = useCodePreview(messages, isStreaming)
+const { activeTab, canvasOpen, generatedCode, toolName, hasCode, previewHtml } = useCodePreview(messages)
 
 const previewFrame = ref<HTMLIFrameElement | null>(null)
 
@@ -126,14 +126,14 @@ const suggestions = [
           <div class="flex items-center gap-1.5 ml-auto shrink-0">
             <div class="flex rounded-lg bg-bg-surface p-0.5">
               <button
-                @click.stop="activeTab = 'code'"
+                @click="activeTab = 'code'"
                 class="rounded-md px-3 py-1 text-xs font-medium transition-colors whitespace-nowrap"
                 :class="activeTab === 'code' ? 'bg-bg-card text-text-primary shadow-sm' : 'text-text-muted hover:text-text-secondary'"
               >
                 Code
               </button>
               <button
-                @click.stop="activeTab = 'preview'"
+                @click="activeTab = 'preview'"
                 class="rounded-md px-3 py-1 text-xs font-medium transition-colors whitespace-nowrap"
                 :class="activeTab === 'preview' ? 'bg-bg-card text-text-primary shadow-sm' : 'text-text-muted hover:text-text-secondary'"
               >

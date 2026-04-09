@@ -54,8 +54,8 @@ function scrollRight() {
       class="flex gap-4 overflow-x-auto hide-scrollbar snap-x snap-mandatory"
     >
       <a
-        v-for="(card, i) in cards"
-        :key="i"
+        v-for="card in cards"
+        :key="card.href"
         :href="card.href"
         class="flex-shrink-0 w-[280px] sm:w-[320px] md:w-[340px] lg:w-[calc(25%-12px)] rounded-2xl overflow-hidden bg-bg-card border border-border-card hover:border-white/15 transition-all hover:-translate-y-0.5 snap-start"
       >

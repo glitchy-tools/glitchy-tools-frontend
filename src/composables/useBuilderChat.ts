@@ -1,4 +1,4 @@
-import { ref, onMounted, nextTick } from 'vue'
+import { ref, onMounted, onUnmounted, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
 
 export interface ChatMessage {
@@ -26,9 +26,19 @@ export function useBuilderChat() {
     })
   }
 
+  function errorMessageForStatus(status: number): string {
+    if (status === 401) return 'You need to be logged in to use the AI builder.'
+    if (status === 429) return 'Too many requests. Please wait a moment and try again.'
+    if (status >= 500) return 'Server error. Please try again later.'
+    return 'Something went wrong. Please try again.'
+  }
+
   async function sendMessage() {
     const text = userInput.value.trim()
     if (!text || isStreaming.value) return
+
+    // Refresh token before each request in case it arrived via postMessage
+    authToken.value = resolveAuthToken()
 
     messages.value.push({ role: 'user', content: text })
     userInput.value = ''
@@ -56,7 +66,7 @@ export function useBuilderChat() {
       )
 
       if (!response.ok || !response.body) {
-        messages.value[messages.value.length - 1].content = 'Something went wrong. Please try again.'
+        messages.value[messages.value.length - 1].content = errorMessageForStatus(response.status)
         return
       }
 
@@ -85,22 +95,24 @@ export function useBuilderChat() {
     }
   }
 
+  // Always refresh token on storage changes (parent postMessage sets localStorage)
+  function onStorageChange() {
+    authToken.value = resolveAuthToken()
+  }
+
   onMounted(() => {
     authToken.value = resolveAuthToken()
+    window.addEventListener('storage', onStorageChange)
 
-    // Re-check token if it arrives after mount (from parent postMessage)
-    window.addEventListener('storage', () => {
-      if (!authToken.value) {
-        authToken.value = resolveAuthToken()
-      }
-    })
-
-    // Auto-send prompt from query param
     const prompt = route.query.prompt as string | undefined
     if (prompt?.trim()) {
       userInput.value = prompt.trim()
       nextTick(() => sendMessage())
     }
+  })
+
+  onUnmounted(() => {
+    window.removeEventListener('storage', onStorageChange)
   })
 
   return {

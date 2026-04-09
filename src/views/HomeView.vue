@@ -8,25 +8,11 @@ import GallerySection from '@/components/landing/GallerySection.vue'
 import ExploreToolsSection from '@/components/landing/ExploreToolsSection.vue'
 import CallToActionSection from '@/components/landing/CallToActionSection.vue'
 import SiteFooter from '@/components/landing/SiteFooter.vue'
+import ToolCard from '@/components/ToolCard.vue'
 import { toolRegistry } from '@/registry'
 
 const router = useRouter()
 const promptInput = ref('')
-
-const categoryIcons: Record<string, string> = {
-  Marketing: 'M22 12h-4l-3 9L9 3l-3 9H2',
-  Design: 'M12 19l7-7 3 3-7 7-3-3zM18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5zM2 2l7.586 7.586',
-  Content: 'M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z',
-  Analytics: 'M18 20V10M12 20V4M6 20v-6',
-  Productivity: 'M22 11.08V12a10 10 0 1 1-5.93-9.14M22 4L12 14.01l-3-3',
-}
-
-const gradientFromSlug = (slug: string) => {
-  let hash = 0
-  for (let i = 0; i < slug.length; i++) hash = slug.charCodeAt(i) + ((hash << 5) - hash)
-  const hue = Math.abs(hash) % 60 + 250
-  return `linear-gradient(135deg, hsl(${hue}, 40%, 20%) 0%, hsl(${hue + 30}, 30%, 12%) 100%)`
-}
 
 function submitPrompt() {
   if (!promptInput.value.trim()) {
@@ -58,7 +44,6 @@ function handleKeydown(e: KeyboardEvent) {
           Describe your tool and our AI builds it for you, or explore tools built by the community.
         </p>
 
-        <!-- Prompt input -->
         <div class="max-w-2xl mx-auto mb-6">
           <div class="relative">
             <input
@@ -77,7 +62,6 @@ function handleKeydown(e: KeyboardEvent) {
           </div>
         </div>
 
-        <!-- Quick actions -->
         <div class="flex items-center justify-center gap-3">
           <a
             href="/create"
@@ -104,33 +88,7 @@ function handleKeydown(e: KeyboardEvent) {
         </header>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          <a
-            v-for="tool in toolRegistry.slice(0, 3)"
-            :key="tool.meta.slug"
-            :href="`/tools/${tool.meta.slug}`"
-            class="flex gap-4 rounded-2xl bg-bg-card border border-border-card p-4 hover:border-white/15 transition-all hover:shadow-lg hover:shadow-black/20"
-          >
-            <!-- Tool icon -->
-            <div
-              class="h-14 w-14 shrink-0 rounded-xl flex items-center justify-center"
-              :style="{ background: gradientFromSlug(tool.meta.slug) }"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
-                fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
-                class="text-white/70"
-              >
-                <path :d="categoryIcons[tool.meta.category] || categoryIcons.Productivity" />
-              </svg>
-            </div>
-
-            <!-- Tool info -->
-            <div class="flex-1 min-w-0">
-              <h3 class="text-sm font-semibold text-white mb-0.5">{{ tool.meta.name }}</h3>
-              <span class="inline-block text-[10px] font-medium text-accent-lime mb-1.5">{{ tool.meta.category }}</span>
-              <p class="text-xs text-text-tertiary leading-relaxed line-clamp-2">{{ tool.meta.description }}</p>
-            </div>
-          </a>
+          <ToolCard v-for="tool in toolRegistry.slice(0, 3)" :key="tool.meta.slug" :tool="tool" />
         </div>
       </section>
 
@@ -151,30 +109,7 @@ function handleKeydown(e: KeyboardEvent) {
         </header>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          <a
-            v-for="tool in toolRegistry"
-            :key="tool.meta.slug"
-            :href="`/tools/${tool.meta.slug}`"
-            class="flex gap-4 rounded-2xl bg-bg-card border border-border-card p-4 hover:border-white/15 transition-all hover:shadow-lg hover:shadow-black/20"
-          >
-            <div
-              class="h-14 w-14 shrink-0 rounded-xl flex items-center justify-center"
-              :style="{ background: gradientFromSlug(tool.meta.slug) }"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
-                fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
-                class="text-white/70"
-              >
-                <path :d="categoryIcons[tool.meta.category] || categoryIcons.Productivity" />
-              </svg>
-            </div>
-            <div class="flex-1 min-w-0">
-              <h3 class="text-sm font-semibold text-white mb-0.5">{{ tool.meta.name }}</h3>
-              <span class="inline-block text-[10px] font-medium text-accent-lime mb-1.5">{{ tool.meta.category }}</span>
-              <p class="text-xs text-text-tertiary leading-relaxed line-clamp-2">{{ tool.meta.description }}</p>
-            </div>
-          </a>
+          <ToolCard v-for="tool in toolRegistry" :key="tool.meta.slug" :tool="tool" />
         </div>
       </section>
     </main>
