@@ -10,6 +10,7 @@
     "moduleDetection": "force",
     "composite": true,
     "emitDeclarationOnly": true,
+    "types": ["node", "vite/client"],
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
