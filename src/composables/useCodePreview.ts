@@ -101,7 +101,9 @@ export function useCodePreview(messages: Ref<ChatMessage[]>) {
     const declarations = collectDeclarations(strippedSetup)
 
     const safeSetup = escapeForTemplateLiteral(strippedSetup)
-    const safeTemplate = escapeForTemplateLiteral(templateMatch[1])
+    // Strip TS casts from template (e.g. "item as string", "(x as Foo).bar")
+    const cleanTemplate = templateMatch[1].replace(/\bas\s+\w[\w[\]<>, |]*(?=[)\s,}])/g, '')
+    const safeTemplate = escapeForTemplateLiteral(cleanTemplate)
     const safeReturn = declarations.length > 0 ? declarations.join(',') : ''
 
     return PREVIEW_SHELL
