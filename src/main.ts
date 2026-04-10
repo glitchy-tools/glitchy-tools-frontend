@@ -19,7 +19,7 @@ if (urlToken) {
 // Also listen for postMessage (fallback for future use)
 const allowedOrigins = [
   /^https?:\/\/localhost(:\d+)?$/,
-  /^https:\/\/([\w-]+\.)?glitchy\.(com|ai|cash|link|team|tools)$/,
+  /^https:\/\/([\w-]+\.)?glitchy\.(com|ai|cash|link|team)$/,
 ]
 
 window.addEventListener('message', (event) => {
