@@ -4,6 +4,26 @@ import { useRoute } from 'vue-router'
 export interface ChatMessage {
   role: 'user' | 'assistant'
   content: string
+  /** Full raw response from Claude (assistant only) — used for code extraction */
+  rawContent?: string
+}
+
+/** Extract a clean display message from Claude's raw response */
+function cleanAssistantMessage(raw: string): string {
+  // If there's a code block, show a short summary instead of the whole response
+  const hasCode = raw.includes('```vue') || (raw.includes('```') && raw.includes('<template'))
+  if (hasCode) {
+    // Extract tool name if present
+    const nameMatch = raw.match(/name:\s*['"](.+?)['"]/)
+    const toolName = nameMatch ? nameMatch[1] : 'your tool'
+    return `Built ${toolName}. Check the preview panel to see it in action. Ask me to make changes if needed.`
+  }
+
+  // If it's an error from Claude API
+  if (raw.startsWith('\n\n[Error:')) return raw
+
+  // For non-code responses, show as-is (e.g. clarifying questions)
+  return raw
 }
 
 export function useBuilderChat() {
@@ -37,7 +57,6 @@ export function useBuilderChat() {
     const text = userInput.value.trim()
     if (!text || isStreaming.value) return
 
-    // Refresh token before each request in case it arrived via postMessage
     authToken.value = resolveAuthToken()
 
     messages.value.push({ role: 'user', content: text })
@@ -45,7 +64,9 @@ export function useBuilderChat() {
     scrollToBottom()
 
     isStreaming.value = true
-    messages.value.push({ role: 'assistant', content: '' })
+    messages.value.push({ role: 'assistant', content: '', rawContent: '' })
+
+    const lastIdx = messages.value.length - 1
 
     try {
       const headers: Record<string, string> = { 'Content-Type': 'application/json' }
@@ -53,36 +74,49 @@ export function useBuilderChat() {
         headers['Authorization'] = `Bearer ${authToken.value}`
       }
 
+      // Send conversation history using rawContent for assistant messages
+      const history = messages.value.slice(0, -1).map(m => ({
+        role: m.role,
+        content: m.role === 'assistant' ? (m.rawContent || m.content) : m.content,
+      }))
+
       const response = await fetch(
         (import.meta.env.VITE_API_BASE_URL || '/v3') + '/tools/builder/chat',
         {
           method: 'POST',
           headers,
           credentials: 'include',
-          body: JSON.stringify({
-            messages: messages.value.slice(0, -1),
-          }),
+          body: JSON.stringify({ messages: history }),
         }
       )
 
       if (!response.ok || !response.body) {
-        messages.value[messages.value.length - 1].content = errorMessageForStatus(response.status)
+        messages.value[lastIdx].content = errorMessageForStatus(response.status)
         return
       }
 
       const reader = response.body.getReader()
       const decoder = new TextDecoder()
 
+      let rawBuffer = ''
+
       while (true) {
         const { done, value } = await reader.read()
         if (done) break
 
-        const chunk = decoder.decode(value, { stream: true })
-        messages.value[messages.value.length - 1].content += chunk
+        rawBuffer += decoder.decode(value, { stream: true })
+        messages.value[lastIdx] = { role: 'assistant', content: '', rawContent: rawBuffer }
         scrollToBottom()
       }
+
+      // Stream done — set clean display message
+      messages.value[lastIdx] = {
+        role: 'assistant',
+        content: cleanAssistantMessage(rawBuffer),
+        rawContent: rawBuffer,
+      }
     } catch {
-      messages.value[messages.value.length - 1].content = 'Failed to connect. Is the server running?'
+      messages.value[lastIdx].content = 'Failed to connect. Is the server running?'
     } finally {
       isStreaming.value = false
     }
@@ -95,7 +129,6 @@ export function useBuilderChat() {
     }
   }
 
-  // Always refresh token on storage changes (parent postMessage sets localStorage)
   function onStorageChange() {
     authToken.value = resolveAuthToken()
   }

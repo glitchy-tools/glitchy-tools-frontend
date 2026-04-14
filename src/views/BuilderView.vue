@@ -87,7 +87,17 @@ const suggestions = [
                 ? 'bg-accent-lime text-bg-primary rounded-br-md'
                 : 'bg-bg-card border border-border-card text-text-primary rounded-bl-md'"
             >
-              <pre class="whitespace-pre-wrap font-[Outfit] break-words">{{ msg.content }}<span v-if="isStreaming && i === messages.length - 1 && msg.role === 'assistant'" class="inline-block w-1.5 h-4 bg-text-primary animate-pulse ml-0.5 align-middle" /></pre>
+              <!-- Streaming: show loading indicator -->
+              <div v-if="isStreaming && i === messages.length - 1 && msg.role === 'assistant'" class="flex items-center gap-2 text-text-secondary">
+                <span class="flex gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-accent-lime animate-bounce [animation-delay:0ms]" />
+                  <span class="w-1.5 h-1.5 rounded-full bg-accent-lime animate-bounce [animation-delay:150ms]" />
+                  <span class="w-1.5 h-1.5 rounded-full bg-accent-lime animate-bounce [animation-delay:300ms]" />
+                </span>
+                <span class="text-text-muted">Building your tool...</span>
+              </div>
+              <!-- Done: show clean message -->
+              <pre v-else class="whitespace-pre-wrap font-[Outfit] break-words">{{ msg.content }}</pre>
             </div>
           </div>
         </div>

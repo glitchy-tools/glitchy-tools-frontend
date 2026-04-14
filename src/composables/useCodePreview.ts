@@ -4,13 +4,14 @@ import type { ChatMessage } from './useBuilderChat'
 import type { Ref } from 'vue'
 import PREVIEW_SHELL from './preview-shell.html?raw'
 
-/** Extract the Vue SFC code block from the last assistant message */
+/** Extract the Vue SFC code block from the last assistant message (uses rawContent) */
 function extractCode(messages: ChatMessage[]): string {
   const codeBlockPattern = /```(?:vue)?\s*\n([\s\S]*?)```/
   for (let i = messages.length - 1; i >= 0; i--) {
     const msg = messages[i]
     if (msg.role === 'assistant') {
-      const match = msg.content.match(codeBlockPattern)
+      const source = msg.rawContent !== undefined ? msg.rawContent : msg.content
+      const match = source.match(codeBlockPattern)
       if (match && match[1].includes('<template')) return match[1].trim()
     }
   }
@@ -84,7 +85,8 @@ export function useCodePreview(messages: Ref<ChatMessage[]>) {
     if (messages.value.length === 0) return false
     const last = messages.value[messages.value.length - 1]
     if (last.role !== 'assistant') return false
-    return last.content.includes('<template')
+    const source = last.rawContent !== undefined ? last.rawContent : last.content
+    return source.includes('<template')
   })
 
   const hasCode = computed(() => generatedCode.value.length > 0 || hasCodeInProgress.value)
