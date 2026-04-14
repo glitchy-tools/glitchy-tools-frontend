@@ -443,6 +443,17 @@ function msgSenderBg(m: Message): string {
 
 <template>
   <div class="nm-tool">
+    <!-- Hero -->
+    <div style="border-radius:16px;background:linear-gradient(135deg,rgba(88,28,135,0.3),rgba(67,56,202,0.2));padding:24px;border:1px solid rgba(255,255,255,0.08);margin-bottom:24px">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div style="height:40px;width:40px;border-radius:12px;background:rgba(168,130,255,0.1);display:flex;align-items:center;justify-content:center;font-size:20px">📲</div>
+        <div>
+          <h2 style="font-size:18px;font-weight:700;color:#f7f7f8;margin:0">Notification Mockup</h2>
+          <p style="font-size:14px;color:rgba(255,255,255,0.6);margin:4px 0 0">Generate realistic phone notification and chat mockups</p>
+        </div>
+      </div>
+    </div>
+
     <!-- Action buttons -->
     <div class="nm-header-actions">
       <button class="nm-btn nm-btn-ghost" @click="openTemplates">&#9889; Templates</button>
