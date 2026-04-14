@@ -453,6 +453,17 @@ onMounted(() => {
 
 <template>
   <div class="ta-root">
+    <!-- Hero -->
+    <div class="rounded-2xl bg-gradient-to-br from-amber-900/30 to-orange-900/20 p-6 border border-border-subtle mb-6">
+      <div class="flex items-center gap-3">
+        <div class="h-10 w-10 rounded-xl bg-accent-lime/10 flex items-center justify-center text-xl">⚡</div>
+        <div>
+          <h2 class="text-lg font-bold text-text-primary">Trending Angles</h2>
+          <p class="text-sm text-text-secondary">Discover trending affiliate angles with ready-to-use hooks and matched offers</p>
+        </div>
+      </div>
+    </div>
+
     <!-- ===== Tab Navigation ===== -->
     <div class="ta-tabs">
       <button

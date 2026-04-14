@@ -5,6 +5,7 @@ export const toolMeta = {
   description: 'Detect ad crawlers and redirect them to a different domain.',
   icon: '🕵️',
   category: 'Marketing',
+  exclusive: true,
   seo: {
     title: 'Ad Crawler Cloaker Tool',
     description: 'Generate cloaking scripts that detect ad network crawlers and redirect them to a compliant landing page.',
@@ -15,8 +16,6 @@ export const toolMeta = {
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
 import { useCopyToClipboard } from '@/composables/useCopyToClipboard'
 
 const { copy, copied } = useCopyToClipboard()
@@ -37,22 +36,12 @@ const crawlerOptions = [
 
 function toggleCrawler(id: string) {
   const idx = selectedCrawlers.value.indexOf(id)
-  if (idx >= 0) {
-    selectedCrawlers.value.splice(idx, 1)
-  } else {
-    selectedCrawlers.value.push(id)
-  }
+  if (idx >= 0) selectedCrawlers.value.splice(idx, 1)
+  else selectedCrawlers.value.push(id)
 }
 
 function escapeForJsString(str: string): string {
-  return str
-    .replace(/\\/g, '\\\\')
-    .replace(/"/g, '\\"')
-    .replace(/'/g, "\\'")
-    .replace(/\n/g, '\\n')
-    .replace(/\r/g, '\\r')
-    .replace(/</g, '\\x3c')
-    .replace(/>/g, '\\x3e')
+  return str.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/'/g, "\\'").replace(/\n/g, '\\n').replace(/\r/g, '\\r').replace(/</g, '\\x3c').replace(/>/g, '\\x3e')
 }
 
 const generatedScript = computed(() => {
@@ -93,68 +82,87 @@ exit;
 </script>
 
 <template>
-  <div class="flex flex-col gap-6">
+  <div class="flex flex-col gap-8">
+    <!-- Hero -->
+    <div class="rounded-2xl bg-gradient-to-br from-purple-900/30 to-indigo-900/20 p-6 border border-border-subtle">
+      <div class="flex items-center gap-3 mb-2">
+        <div class="h-10 w-10 rounded-xl bg-accent-lime/10 flex items-center justify-center text-xl">🕵️</div>
+        <div>
+          <h2 class="text-lg font-bold text-text-primary">Ad Crawler Cloaker</h2>
+          <p class="text-sm text-text-secondary">Generate cloaking scripts to redirect ad crawlers to a safe page</p>
+        </div>
+      </div>
+    </div>
+
     <div class="grid gap-6 lg:grid-cols-2">
       <!-- Config -->
-      <div class="flex flex-col gap-4">
-        <div>
-          <label for="real-url" class="text-sm font-medium mb-1 block">Real destination URL</label>
-          <input
-            id="real-url"
-            v-model="realUrl"
-            type="url"
-            placeholder="https://your-actual-page.com/offer"
-            class="flex h-10 w-full rounded-xl border border-border bg-card px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 transition-shadow"
-          />
+      <div class="flex flex-col gap-5">
+        <div class="rounded-2xl bg-bg-card p-5 border border-border-card">
+          <h3 class="text-sm font-semibold text-text-primary mb-4">URL Configuration</h3>
+          <div class="flex flex-col gap-4">
+            <div>
+              <label class="text-xs font-medium text-text-secondary mb-1.5 block">Real destination URL</label>
+              <input
+                v-model="realUrl"
+                type="url"
+                placeholder="https://your-actual-page.com/offer"
+                class="w-full rounded-xl border border-border-card bg-bg-surface px-3 py-2.5 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-accent-lime/50 transition-shadow"
+              />
+            </div>
+            <div>
+              <label class="text-xs font-medium text-text-secondary mb-1.5 block">Safe/compliant URL (shown to crawlers)</label>
+              <input
+                v-model="safeUrl"
+                type="url"
+                placeholder="https://your-safe-page.com"
+                class="w-full rounded-xl border border-border-card bg-bg-surface px-3 py-2.5 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-accent-lime/50 transition-shadow"
+              />
+            </div>
+          </div>
         </div>
 
-        <div>
-          <label for="safe-url" class="text-sm font-medium mb-1 block">Safe/compliant URL (shown to crawlers)</label>
-          <input
-            id="safe-url"
-            v-model="safeUrl"
-            type="url"
-            placeholder="https://your-safe-page.com"
-            class="flex h-10 w-full rounded-xl border border-border bg-card px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 transition-shadow"
-          />
-        </div>
-
-        <div>
-          <p class="text-sm font-medium mb-2">Detect these crawlers</p>
+        <div class="rounded-2xl bg-bg-card p-5 border border-border-card">
+          <h3 class="text-sm font-semibold text-text-primary mb-3">Detect these crawlers</h3>
           <div class="flex flex-wrap gap-2">
             <button
               v-for="crawler in crawlerOptions"
               :key="crawler.id"
               class="rounded-full px-4 py-1.5 text-sm font-medium transition-all"
               :class="selectedCrawlers.includes(crawler.id)
-                ? 'bg-primary text-primary-foreground shadow-md shadow-primary/25'
-                : 'bg-card border border-border text-muted-foreground hover:text-foreground hover:border-foreground/20'"
+                ? 'bg-accent-lime text-bg-primary shadow-md shadow-accent-lime/25'
+                : 'bg-bg-surface border border-border-card text-text-secondary hover:text-text-primary hover:border-white/20'"
               @click="toggleCrawler(crawler.id)"
             >
               {{ crawler.label }}
             </button>
           </div>
+          <p class="text-xs text-text-muted mt-3">{{ selectedCrawlers.length }} of {{ crawlerOptions.length }} selected</p>
         </div>
       </div>
 
       <!-- Output -->
-      <Card>
-        <CardContent class="p-4 flex flex-col gap-3">
-          <div class="flex items-center justify-between">
-            <p class="text-sm font-medium">Generated Script</p>
-            <Button size="sm" variant="outline" @click="copy(generatedScript)" :disabled="!generatedScript">
-              {{ copied ? 'Copied!' : 'Copy' }}
-            </Button>
-          </div>
-          <pre
+      <div class="rounded-2xl bg-bg-card p-5 border border-border-card flex flex-col gap-3">
+        <div class="flex items-center justify-between">
+          <h3 class="text-sm font-semibold text-text-primary">Generated Script</h3>
+          <button
             v-if="generatedScript"
-            class="rounded-lg bg-background p-4 text-xs font-mono overflow-auto max-h-96 border border-border"
-          >{{ generatedScript }}</pre>
-          <p v-else class="text-sm text-muted-foreground py-8 text-center">
-            Enter both URLs and select at least one crawler to generate the script.
-          </p>
-        </CardContent>
-      </Card>
+            @click="copy(generatedScript)"
+            class="rounded-lg bg-accent-lime text-bg-primary px-3 py-1.5 text-xs font-semibold hover:brightness-110 transition-all"
+          >
+            {{ copied ? 'Copied!' : 'Copy Script' }}
+          </button>
+        </div>
+        <pre
+          v-if="generatedScript"
+          class="rounded-xl bg-bg-primary p-4 text-xs font-mono text-text-secondary overflow-auto max-h-[500px] border border-border-subtle leading-relaxed"
+        >{{ generatedScript }}</pre>
+        <div v-else class="flex flex-col items-center justify-center py-12 text-center">
+          <div class="h-12 w-12 rounded-xl bg-bg-surface flex items-center justify-center mb-3">
+            <span class="text-2xl opacity-40">🔒</span>
+          </div>
+          <p class="text-sm text-text-muted">Enter both URLs and select at least one crawler</p>
+        </div>
+      </div>
     </div>
   </div>
 </template>
