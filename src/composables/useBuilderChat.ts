@@ -57,6 +57,9 @@ export function useBuilderChat() {
     const text = userInput.value.trim()
     if (!text || isStreaming.value) return
 
+    // Reset auto-retry count on manual messages
+    if (!text.startsWith('The tool has a runtime error:')) retryCount = 0
+
     authToken.value = resolveAuthToken()
 
     messages.value.push({ role: 'user', content: text })
@@ -133,9 +136,24 @@ export function useBuilderChat() {
     authToken.value = resolveAuthToken()
   }
 
+  // Auto-fix: when the preview iframe reports an error, send it back to Claude
+  let retryCount = 0
+  const MAX_RETRIES = 2
+
+  function onPreviewError(event: MessageEvent) {
+    if (event.data?.type !== 'glitchy:preview-error') return
+    if (isStreaming.value || retryCount >= MAX_RETRIES) return
+
+    retryCount++
+    const error = event.data.error
+    userInput.value = `The tool has a runtime error: "${error}". Please fix the code.`
+    nextTick(() => sendMessage())
+  }
+
   onMounted(() => {
     authToken.value = resolveAuthToken()
     window.addEventListener('storage', onStorageChange)
+    window.addEventListener('message', onPreviewError)
 
     const prompt = route.query.prompt as string | undefined
     if (prompt?.trim()) {
@@ -146,6 +164,7 @@ export function useBuilderChat() {
 
   onUnmounted(() => {
     window.removeEventListener('storage', onStorageChange)
+    window.removeEventListener('message', onPreviewError)
   })
 
   return {

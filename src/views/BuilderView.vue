@@ -10,10 +10,10 @@ const { activeTab, canvasOpen, generatedCode, toolName, hasCode, previewHtml } =
 const previewFrame = ref<HTMLIFrameElement | null>(null)
 
 const suggestions = [
-  'A color palette generator',
-  'A word counter with reading time',
-  'A QR code generator',
-  'A JSON formatter and validator',
+  'A character counter',
+  'A hex to RGB color converter',
+  'A text case converter',
+  'A lorem ipsum generator',
 ]
 </script>
 

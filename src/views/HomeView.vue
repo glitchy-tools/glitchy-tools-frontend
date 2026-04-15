@@ -50,7 +50,7 @@ function handleKeydown(e: KeyboardEvent) {
               v-model="promptInput"
               @keydown="handleKeydown"
               type="text"
-              placeholder="A QR code generator, a color palette tool, a JSON formatter..."
+              placeholder="A character counter, a hex to RGB converter, a text case converter..."
               class="w-full rounded-2xl border border-border-card bg-bg-card pl-5 pr-14 py-4 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-accent-lime/50 shadow-card transition-shadow"
             />
             <button

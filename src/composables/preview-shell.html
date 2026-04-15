@@ -32,21 +32,24 @@ function downloadBlob(b,n){downloadDataUrl(URL.createObjectURL(b),n)}
 function cn(){return Array.from(arguments).flat().filter(Boolean).join(' ')}
 
 try{
-  var setupFn=new Function('ref','reactive','computed','watch','watchEffect','onMounted','onUnmounted','nextTick','toRef','toRefs','Button','Card','CardContent','useCopyToClipboard','downloadDataUrl','downloadBlob','cn',
+  var setupFn=new Function('ref','reactive','computed','watch','watchEffect','onMounted','onUnmounted','nextTick','toRef','toRefs','Button','Card','CardContent','useCopyToClipboard','downloadDataUrl','downloadBlob','cn','__s',
     __SETUP_CODE__);
 
   var app=createApp({
     setup:function(){
-      return setupFn(ref,reactive,computed,watch,watchEffect,onMounted,onUnmounted,nextTick,toRef,toRefs,Button,Card,CardContent,useCopyToClipboard,downloadDataUrl,downloadBlob,cn);
+      var __s={};
+      setupFn(ref,reactive,computed,watch,watchEffect,onMounted,onUnmounted,nextTick,toRef,toRefs,Button,Card,CardContent,useCopyToClipboard,downloadDataUrl,downloadBlob,cn,__s);
+      return __s;
     },
     template:__TEMPLATE__
   });
   app.component('Button',Button);
   app.component('Card',Card);
   app.component('CardContent',CardContent);
+  app.config.errorHandler=function(err){window.parent.postMessage({type:'glitchy:preview-error',error:err.message},'*')};
   app.mount('#app');
 }catch(e){
-  document.getElementById('app').innerHTML='<div style="color:#ff6b6b;padding:20px;font-family:monospace;white-space:pre-wrap;font-size:13px">Preview Error:\n\n'+e.message+'\n\n'+e.stack+'</div>';
+  window.parent.postMessage({type:'glitchy:preview-error',error:e.message},'*');
 }
 </script>
 </body>

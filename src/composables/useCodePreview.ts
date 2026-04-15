@@ -37,35 +37,47 @@ function escapeForTemplateLiteral(s: string): string {
   return s.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$\{/g, '\\${')
 }
 
-/** Collect top-level declaration names, including destructured */
-function collectDeclarations(code: string): string[] {
-  const names: string[] = []
+/**
+ * Rewrite setup code so every top-level declaration also assigns to `__s`.
+ * e.g. `const foo = ref(0)` → `const foo = __s.foo = ref(0)`
+ * e.g. `const { a, b } = useFoo()` → `const { a, b } = useFoo(); __s.a=a; __s.b=b;`
+ * e.g. `function bar() {}` → `function bar() {} __s.bar=bar;`
+ */
+function injectScopeCapture(code: string): string {
+  let result = code
 
-  // Simple: const foo = ..., function bar() ...
-  const simpleRe = /(?:^|\n)\s*(?:const|let|var|function)\s+(\w+)/g
-  let m: RegExpExecArray | null
-  while ((m = simpleRe.exec(code)) !== null) names.push(m[1])
+  // Simple declarations: const foo = X → const foo = __s.foo = X
+  result = result.replace(/((?:const|let|var)\s+)(\w+)(\s*=)/g, '$1$2$3 __s.$2 =')
 
-  // Destructured objects: const { a, b } = ...
-  const objRe = /(?:^|\n)\s*(?:const|let|var)\s+\{([^}]+)\}/g
-  while ((m = objRe.exec(code)) !== null) {
-    m[1].split(',').forEach(part => {
-      const renamed = part.includes(':') ? part.split(':')[1] : part
-      const name = renamed.trim()
-      if (name && /^\w+$/.test(name)) names.push(name)
-    })
-  }
+  // Destructured objects: const { a, b } = X → const { a, b } = X; __s.a=a; __s.b=b;
+  result = result.replace(/((?:const|let|var)\s+\{([^}]+)\}\s*=[^;]+;?)/g, (match, full, names) => {
+    const assigns = names.split(',').map((part: string) => {
+      const renamed = part.includes(':') ? part.split(':')[1].trim() : part.trim()
+      if (renamed && /^\w+$/.test(renamed)) return `__s.${renamed}=${renamed};`
+      return ''
+    }).join('')
+    return full + assigns
+  })
 
-  // Destructured arrays: const [x, y] = ...
-  const arrRe = /(?:^|\n)\s*(?:const|let|var)\s+\[([^\]]+)\]/g
-  while ((m = arrRe.exec(code)) !== null) {
-    m[1].split(',').forEach(part => {
+  // Destructured arrays: const [a, b] = X → const [a, b] = X; __s.a=a; __s.b=b;
+  result = result.replace(/((?:const|let|var)\s+\[([^\]]+)\]\s*=[^;]+;?)/g, (match, full, names) => {
+    const assigns = names.split(',').map((part: string) => {
       const name = part.trim()
-      if (name && /^\w+$/.test(name)) names.push(name)
-    })
+      if (name && /^\w+$/.test(name)) return `__s.${name}=${name};`
+      return ''
+    }).join('')
+    return full + assigns
+  })
+
+  // Functions: add __s.foo=foo after each function declaration
+  // We match the function name and add assignment after — Vue template will find it in __s
+  const funcNames: string[] = []
+  result.replace(/function\s+(\w+)\s*\(/g, (_, name) => { funcNames.push(name); return _ })
+  if (funcNames.length > 0) {
+    result += '\n' + funcNames.map(n => `__s.${n}=${n};`).join('')
   }
 
-  return [...new Set(names)]
+  return result
 }
 
 export function useCodePreview(messages: Ref<ChatMessage[]>) {
@@ -100,16 +112,14 @@ export function useCodePreview(messages: Ref<ChatMessage[]>) {
     if (!templateMatch) return ''
 
     const strippedSetup = stripTypeScript(setupMatch ? setupMatch[1] : '')
-    const declarations = collectDeclarations(strippedSetup)
+    const capturedSetup = injectScopeCapture(strippedSetup)
 
-    const safeSetup = escapeForTemplateLiteral(strippedSetup)
-    // Strip TS casts from template (e.g. "item as string", "(x as Foo).bar")
+    const safeSetup = escapeForTemplateLiteral(capturedSetup)
     const cleanTemplate = templateMatch[1].replace(/\bas\s+\w[\w[\]<>, |]*(?=[)\s,}])/g, '')
     const safeTemplate = escapeForTemplateLiteral(cleanTemplate)
-    const safeReturn = declarations.length > 0 ? declarations.join(',') : ''
 
     return PREVIEW_SHELL
-      .replace('__SETUP_CODE__', '`' + safeSetup + '\\nreturn{' + safeReturn + '}`')
+      .replace('__SETUP_CODE__', '`' + safeSetup + '`')
       .replace('__TEMPLATE__', '`' + safeTemplate + '`')
   })
 
