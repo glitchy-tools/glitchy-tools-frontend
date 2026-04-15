@@ -167,6 +167,13 @@ export function useBuilderChat() {
     window.removeEventListener('message', onPreviewError)
   })
 
+  function clearChat() {
+    messages.value = []
+    userInput.value = ''
+    isStreaming.value = false
+    retryCount = 0
+  }
+
   return {
     messages,
     userInput,
@@ -174,5 +181,6 @@ export function useBuilderChat() {
     chatContainer,
     sendMessage,
     handleKeydown,
+    clearChat,
   }
 }

@@ -4,7 +4,7 @@ import { RouterLink } from 'vue-router'
 import { useBuilderChat } from '@/composables/useBuilderChat'
 import { useCodePreview } from '@/composables/useCodePreview'
 
-const { messages, userInput, isStreaming, chatContainer, sendMessage, handleKeydown } = useBuilderChat()
+const { messages, userInput, isStreaming, chatContainer, sendMessage, handleKeydown, clearChat } = useBuilderChat()
 const { activeTab, canvasOpen, generatedCode, toolName, hasCode, previewHtml } = useCodePreview(messages)
 
 const previewFrame = ref<HTMLIFrameElement | null>(null)
@@ -40,9 +40,16 @@ const suggestions = [
             <span class="text-sm font-semibold text-text-primary">Glitchy AI</span>
           </div>
           <button
+            v-if="messages.length > 0"
+            @click="clearChat(); canvasOpen = false"
+            class="ml-auto rounded-lg bg-bg-surface border border-border-card px-3 py-1 text-xs font-medium text-text-secondary hover:text-text-primary hover:border-white/20 transition-colors"
+          >
+            New Chat
+          </button>
+          <button
             v-if="!canvasOpen && hasCode"
             @click="canvasOpen = true"
-            class="ml-auto flex items-center gap-1.5 rounded-lg bg-bg-surface border border-border-card px-3 py-1 text-xs font-medium text-text-secondary hover:text-text-primary hover:border-white/20 transition-colors"
+            class="flex items-center gap-1.5 rounded-lg bg-bg-surface border border-border-card px-3 py-1 text-xs font-medium text-text-secondary hover:text-text-primary hover:border-white/20 transition-colors"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
             Show Preview
