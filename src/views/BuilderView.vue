@@ -110,22 +110,23 @@ const suggestions = [
         </div>
 
         <!-- Input -->
-        <div class="shrink-0 border-t border-border-subtle p-3">
+        <div class="shrink-0 border-t border-border-subtle p-3 pb-20">
           <div class="relative">
             <textarea
               v-model="userInput"
               @keydown="handleKeydown"
               :disabled="isStreaming"
-              rows="3"
+              rows="2"
               :placeholder="messages.length === 0 ? 'Describe the tool you want to build...' : 'Ask for changes...'"
-              class="w-full resize-none rounded-xl border border-border-card bg-bg-surface px-4 py-3 pr-14 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-accent-lime/50 transition-shadow disabled:opacity-50"
+              class="w-full resize-none rounded-xl border border-border-card bg-bg-surface px-4 py-3 pr-24 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-accent-lime/50 transition-shadow disabled:opacity-50"
             />
             <button
               @click="sendMessage"
               :disabled="!userInput.trim() || isStreaming"
-              class="absolute bottom-3 right-3 rounded-lg bg-accent-lime p-2 text-bg-primary hover:brightness-110 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+              class="absolute top-3 right-3 flex items-center gap-1.5 rounded-lg bg-accent-lime text-bg-primary px-3 py-1.5 text-xs font-semibold hover:brightness-110 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+              {{ isStreaming ? 'Building...' : 'Send' }}
+              <svg v-if="!isStreaming" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
             </button>
           </div>
         </div>
