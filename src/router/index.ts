@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { getToolBySlug } from '@/registry'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -30,6 +31,16 @@ const router = createRouter({
       component: () => import('@/views/NotFoundView.vue'),
     },
   ],
+})
+
+// Block exclusive tools for unauthenticated users
+router.beforeEach((to) => {
+  if (to.name === 'tool' && to.params.slug) {
+    const tool = getToolBySlug(to.params.slug as string)
+    if (tool?.meta.exclusive && !localStorage.getItem('glitchy_token')) {
+      return { name: 'home' }
+    }
+  }
 })
 
 export default router

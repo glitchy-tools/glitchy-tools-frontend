@@ -58,6 +58,7 @@ export interface ToolMeta {
   description: string
   icon: string
   category: string
+  exclusive?: boolean
   seo: ToolSeo
 }
 
