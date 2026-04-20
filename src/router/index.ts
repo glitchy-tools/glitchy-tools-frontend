@@ -10,9 +10,9 @@ const router = createRouter({
       component: () => import('@/views/HomeView.vue'),
     },
     {
-      path: '/free-tools',
-      name: 'free-tools',
-      component: () => import('@/views/FreeToolsView.vue'),
+      path: '/all-tools',
+      name: 'all-tools',
+      component: () => import('@/views/AllToolsView.vue'),
     },
     {
       path: '/create',

@@ -5,7 +5,7 @@ const mobileMenuOpen = ref(false)
 const navLinks = [
   { label: 'Explore', href: '/', active: true },
   { label: 'AI Studio', href: '/create', badge: 'New' },
-  { label: 'Free Tools', href: '/free-tools' },
+  { label: 'All Tools', href: '/all-tools' },
 ]
 </script>
 
@@ -34,36 +34,12 @@ const navLinks = [
         </a>
       </nav>
 
-      <div class="flex items-center gap-2 shrink-0">
-        <template>
-          <a href="/signup" class="hidden md:flex flex-col items-center text-text-secondary hover:text-white transition-colors text-sm relative">
-            <span class="flex items-center gap-1">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" class="text-accent-lime">
-                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
-              </svg>
-              Sign up
-            </span>
-            <span class="absolute -bottom-3.5 text-[10px] bg-accent-brand text-white px-1.5 py-0.5 rounded font-semibold leading-none">
-              30% OFF
-            </span>
-          </a>
-
-          <a href="/login" class="px-4 py-1.5 text-sm text-white border border-white/20 rounded-lg hover:bg-white/5 transition-colors">
-            Login
-          </a>
-
-          <a href="/signup" class="px-4 py-1.5 text-sm font-semibold bg-accent-lime text-bg-primary rounded-lg hover:brightness-110 transition-all">
-            Sign up
-          </a>
-        </template>
-
-        <button class="lg:hidden p-2 text-text-secondary hover:text-white" @click="mobileMenuOpen = !mobileMenuOpen">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path v-if="!mobileMenuOpen" d="M3 12h18M3 6h18M3 18h18" />
-            <path v-else d="M6 6l12 12M6 18L18 6" />
-          </svg>
-        </button>
-      </div>
+      <button class="lg:hidden p-2 text-text-secondary hover:text-white" @click="mobileMenuOpen = !mobileMenuOpen">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path v-if="!mobileMenuOpen" d="M3 12h18M3 6h18M3 18h18" />
+          <path v-else d="M6 6l12 12M6 18L18 6" />
+        </svg>
+      </button>
     </div>
 
     <div
