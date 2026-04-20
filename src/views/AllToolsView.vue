@@ -42,7 +42,7 @@ const filteredTools = computed(() => {
     <div class="site-container py-6 md:py-10">
       <div class="mb-8">
         <h1 class="text-2xl md:text-3xl font-bold text-text-primary mb-2">All Tools</h1>
-        <p class="text-sm text-text-secondary mb-5">Browse all tools — exclusive tools require login</p>
+        <p class="text-sm text-text-secondary mb-5">Browse all tools on glitchy.tools — exclusive tools require login</p>
 
         <div class="relative max-w-md">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-muted"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
