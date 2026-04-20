@@ -5,6 +5,7 @@ export const toolMeta = {
   description: 'Generate SEO meta tags, Open Graph tags, and Twitter Cards for your pages.',
   icon: '🏷️',
   category: 'Marketing',
+  exclusive: true,
   seo: {
     title: 'Meta Tag Generator — Glitchy Tools',
     description: 'Generate HTML meta tags for SEO, Open Graph, and Twitter Cards. Preview how your page appears in search results.',

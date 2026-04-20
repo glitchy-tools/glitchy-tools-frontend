@@ -5,6 +5,7 @@ export const toolMeta = {
   description: 'Score your headlines for emotional impact, word balance, and click-through potential.',
   icon: '📝',
   category: 'Content',
+  exclusive: true,
   seo: {
     title: 'Headline Analyzer — Glitchy Tools',
     description: 'Analyze your headlines for emotional impact and engagement. Get scores and suggestions to improve CTR.',

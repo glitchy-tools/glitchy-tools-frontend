@@ -5,6 +5,7 @@ export const toolMeta = {
   description: 'Discover trending affiliate angles with ready-to-use hooks and matched offers.',
   icon: '⚡',
   category: 'Marketing',
+  exclusive: true,
   seo: {
     title: 'Trending Angles — Glitchy Tools',
     description: 'Find trending affiliate angles with matched offers and copy-ready hooks. Built for the Glitchy team.',
