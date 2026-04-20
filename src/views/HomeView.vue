@@ -4,11 +4,10 @@ import SiteHeader from '@/components/landing/SiteHeader.vue'
 import SiteFooter from '@/components/landing/SiteFooter.vue'
 import ToolCard from '@/components/ToolCard.vue'
 import { toolRegistry } from '@/registry'
+import { categoryIcons, gradientFromSlug } from '@/lib/tools'
 
 const searchQuery = ref('')
 const showAll = ref(false)
-
-const isAuthenticated = computed(() => !!localStorage.getItem('glitchy_token'))
 
 const freeTools = computed(() => toolRegistry.filter(t => !t.meta.exclusive))
 const exclusiveTools = computed(() => toolRegistry.filter(t => t.meta.exclusive))
@@ -40,10 +39,10 @@ const hasMore = computed(() => !showAll.value && !searchQuery.value && filteredF
       <!-- Hero -->
       <section class="py-10 md:py-14 text-center">
         <h1 class="text-3xl md:text-4xl font-bold text-text-primary mb-3">
-          Glitchy <span class="text-accent-lime">Tools</span>
+          glitchy<span class="text-accent-lime">.tools</span>
         </h1>
         <p class="text-sm md:text-base text-text-secondary mb-8 max-w-lg mx-auto">
-          Search for tools, create an account for exclusive access, or build your own tool with AI and submit it for review.
+          Search for tools, create an account for exclusive access, and build your own tool with AI and submit it for review.
         </p>
 
         <!-- Search (centered) -->
@@ -88,43 +87,34 @@ const hasMore = computed(() => !showAll.value && !searchQuery.value && filteredF
             <div class="flex flex-col items-center justify-center p-8 md:p-10 text-center">
               <p class="text-[10px] uppercase tracking-[0.2em] text-text-tertiary mb-3">Exclusively on glitchy.tools</p>
               <h2 class="text-2xl md:text-3xl font-bold text-text-primary mb-4 tracking-wide">
-                CREATIVE <span class="text-accent-lime">SUITE</span>
+                GLITCHY <span class="text-accent-lime">PRO</span>
               </h2>
-              <p class="text-sm text-text-secondary mb-1">The All-in-One Marketing Toolkit</p>
-              <template v-if="!isAuthenticated">
-                <a href="/signup" class="w-full inline-block py-2.5 px-4 text-sm font-semibold text-bg-primary bg-accent-lime rounded-lg hover:brightness-110 transition-all mb-3 text-center mt-4">
-                  Sign up free
-                </a>
-                <p class="text-xs text-text-muted mb-4">No credit card required</p>
-              </template>
-              <template v-else>
-                <a href="/all-tools" class="w-full inline-block py-2.5 px-4 text-sm font-semibold text-bg-primary bg-accent-lime rounded-lg hover:brightness-110 transition-all mb-3 text-center mt-4">
-                  Browse Suite
-                </a>
-              </template>
-              <a href="/all-tools" class="text-sm text-text-secondary hover:text-white hover:underline transition-colors">
-                Browse all templates
+              <a href="/exclusive" class="w-full inline-block py-2.5 px-4 text-sm font-semibold text-bg-primary bg-accent-lime rounded-lg hover:brightness-110 transition-all mb-3 text-center mt-4">
+                Explore Pro Tools
               </a>
             </div>
 
-            <div class="relative">
-              <div class="grid grid-cols-2 md:grid-cols-4 gap-1.5 p-1.5">
+            <div class="relative p-4">
+              <div class="grid grid-cols-2 md:grid-cols-4 gap-2 blur-[3px]">
                 <div
-                  v-for="i in 12"
-                  :key="i"
-                  class="aspect-video rounded-lg overflow-hidden bg-bg-card-hover"
+                  v-for="tool in exclusiveTools"
+                  :key="tool.meta.slug"
+                  class="rounded-xl bg-bg-surface border border-border-card p-3 text-center"
                 >
-                  <div
-                    class="w-full h-full"
-                    :style="{ background: `linear-gradient(${135 + i * 15}deg, hsl(${265 + i * 3}, ${20 + i * 2}%, ${16 + i}%), hsl(${260 + i * 2}, ${15 + i}%, ${10 + i}%))` }"
-                  />
+                  <div class="h-10 w-10 rounded-lg mx-auto mb-2 flex items-center justify-center" :style="{ background: gradientFromSlug(tool.meta.slug) }">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="text-white/70"><path :d="categoryIcons[tool.meta.category] || categoryIcons.Productivity" /></svg>
+                  </div>
+                  <p class="text-xs font-medium text-text-primary truncate">{{ tool.meta.name }}</p>
+                  <p class="text-[10px] text-text-muted truncate">{{ tool.meta.category }}</p>
                 </div>
               </div>
-              <div class="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-bg-card to-transparent flex items-end justify-center pb-4">
-                <a href="/all-tools" class="flex items-center gap-2 text-sm text-accent-lime hover:underline transition-colors">
-                  View all templates
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10" /></svg>
-                </a>
+              <div class="absolute inset-0 flex items-center justify-center">
+                <div class="text-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-accent-lime mx-auto mb-3">
+                    <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                  </svg>
+                </div>
               </div>
             </div>
           </div>
