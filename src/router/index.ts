@@ -15,6 +15,11 @@ const router = createRouter({
       component: () => import('@/views/AllToolsView.vue'),
     },
     {
+      path: '/exclusive',
+      name: 'exclusive',
+      component: () => import('@/views/ExclusiveToolsView.vue'),
+    },
+    {
       path: '/create',
       name: 'create',
       component: () => import('@/views/BuilderView.vue'),
